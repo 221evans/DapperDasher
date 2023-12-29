@@ -6,10 +6,10 @@ int main()
     // window dimensions
     const int windowWidth{512};
     const int windowHeight{380};
-    const int jumpVelocity{-20};
+    const int jumpVelocity{-600};
     bool isJumping{false};
     InitWindow(windowWidth, windowHeight, "Dapper Dasher");
-    const int gravity{1};
+    const int gravity{1000};
     SetTargetFPS(60);
 
     Texture2D scarfy = LoadTexture("/Users/jasonevans/Documents/DapperDasher/textures/scarfy.png");
@@ -30,6 +30,7 @@ int main()
     {
         BeginDrawing();
         ClearBackground(WHITE);
+        const float deltaTime = GetFrameTime();
         if (scarfyPos.y >= windowHeight - scarfyRec.height)
         {
             // ground check
@@ -39,7 +40,8 @@ int main()
         else
         {
             // apply gravity
-            velocity += gravity;
+
+            velocity += gravity * deltaTime;
             isJumping = true;
         }
 
@@ -51,7 +53,7 @@ int main()
         }
 
         // apply velocity to position
-        scarfyPos.y += velocity;
+        scarfyPos.y += velocity * deltaTime;
 
         DrawTextureRec(scarfy,scarfyRec,scarfyPos,WHITE);
 
