@@ -30,7 +30,7 @@ int main()
     nebulaRec.y = 0;
     Vector2 nebulaPos{windowWidth, windowHeight - nebulaRec.height};
     // nebula x velocity
-    int nebulaVel{-600};
+    int nebulaVel{-200};
 
 
 
@@ -45,10 +45,16 @@ int main()
     scarfyPos.x = windowWidth/2 - scarfyRec.width /2;
     scarfyPos.y = windowHeight - scarfyRec.height;
 
-    // animation frame
+    // player animation variables
     int frame{};
     const float updateTime{1.0 / 12.0}; // amount of time before we update animation frame
     float runningTime{0};
+
+    // nebula animation variables
+
+    int nebulaFrame{};
+    const float  nebulaUpdateTime{1.0 / 12.0};
+    float nebulaRunningTime{0};
 
 
 
@@ -85,8 +91,24 @@ int main()
 
         // apply velocity to position
         scarfyPos.y += velocity * deltaTime;
+
         //update running time
         runningTime += deltaTime;
+
+        // update nebula running time
+        nebulaRunningTime += deltaTime;
+
+        if (nebulaRunningTime >= nebulaUpdateTime)
+        {
+            nebulaRunningTime = 0.0;
+            nebulaRec.x = nebulaFrame * nebulaRec.width;
+            nebulaFrame ++;
+            if(nebulaFrame > 7)
+            {
+                nebulaFrame = 0;
+            }
+        }
+
         if(runningTime >= updateTime && !isJumping)
         {
             runningTime = 0;
