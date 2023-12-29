@@ -21,6 +21,20 @@ int main()
     SetTargetFPS(60);
 
 
+    // nebula variables
+    Texture2D nebula = LoadTexture("/Users/jasonevans/Documents/DapperDasher/textures/12_nebula_spritesheet.png");
+    Rectangle nebulaRec;
+    nebulaRec.width = nebula.width/8;
+    nebulaRec.height = nebula.height/8;
+    nebulaRec.x = 0;
+    nebulaRec.y = 0;
+    Vector2 nebulaPos{windowWidth, windowHeight - nebulaRec.height};
+    // nebula x velocity
+    int nebulaVel{-600};
+
+
+
+    // player variables
     Texture2D scarfy = LoadTexture("/Users/jasonevans/Documents/DapperDasher/textures/scarfy.png");
     Rectangle scarfyRec;
     scarfyRec.width = scarfy.width/6;
@@ -65,11 +79,15 @@ int main()
 
         }
 
+        // update nebula position
+
+        nebulaPos.x += nebulaVel * deltaTime;
+
         // apply velocity to position
         scarfyPos.y += velocity * deltaTime;
         //update running time
         runningTime += deltaTime;
-        if(runningTime >= updateTime)
+        if(runningTime >= updateTime && !isJumping)
         {
             runningTime = 0;
             // update animation frame
@@ -81,11 +99,14 @@ int main()
             }
         }
 
-
+        // draw player
         DrawTextureRec(scarfy,scarfyRec,scarfyPos,WHITE);
+        // draw nebula
+        DrawTextureRec(nebula,nebulaRec,nebulaPos,WHITE);
 
         EndDrawing();
     }
     UnloadTexture(scarfy);
+    UnloadTexture(nebula);
     CloseWindow();
 }
