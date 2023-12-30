@@ -45,6 +45,8 @@ int main()
     bool isJumping{false};
     int velocity{0};
 
+
+
     // initiate window
     InitWindow(windowDimensions[0], windowDimensions[1], "Dapper Dasher");
 
@@ -90,12 +92,22 @@ int main()
         nebulae[i].pos.x = windowDimensions[0] + i * 300;
     }
 
-
+    Texture2D background = LoadTexture("../textures/far-buildings.png");
+    float bgX{};
     while (!WindowShouldClose())
     {
+        const float deltaTime = GetFrameTime();
         BeginDrawing();
         ClearBackground(WHITE);
-        const float deltaTime = GetFrameTime();
+
+        bgX -= 20 * deltaTime;
+
+        // draw background
+        Vector2  bgPos{bgX, 0.0};
+        DrawTextureEx(background, bgPos,0.0, 2.0,WHITE);
+
+
+
 
         if (IsOnGround(scarfyData, windowDimensions[1]))
         {
@@ -151,5 +163,6 @@ int main()
     }
     UnloadTexture(scarfy);
     UnloadTexture(nebula);
+
     CloseWindow();
 }
