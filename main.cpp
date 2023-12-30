@@ -10,6 +10,29 @@ struct AnimData
 
 };
 
+bool IsOnGround(AnimData data, int windowHeight)
+{
+    return data.pos.y >= windowHeight - data.rec.height;
+
+}
+
+AnimData UpdateAnimData(AnimData data, float deltaTime, int maxFrame)
+{
+    data.runningTime += deltaTime;
+    if(data.runningTime >= data.updateTime)
+    {
+        data.runningTime = 0.0;
+        // update animation frame
+        data.rec.x = data.frame * data.rec.width;
+        data.frame ++;
+        if(data.frame >= maxFrame)
+        {
+            data.frame = 0;
+        }
+    }
+    return data;
+}
+
 int main()
 {
 
@@ -63,7 +86,7 @@ int main()
         nebulae[i].pos.y = windowDimensions[1] - nebula.height / 8;
         nebulae[i].frame = 0;
         nebulae[i].runningTime = 0.0;
-        nebulae[i].updateTime = 1.0 / 16.0;
+        nebulae[i].updateTime = 1.0 / 12.0;
         nebulae[i].pos.x = windowDimensions[0] + i * 300;
     }
 
@@ -73,7 +96,8 @@ int main()
         BeginDrawing();
         ClearBackground(WHITE);
         const float deltaTime = GetFrameTime();
-        if (scarfyData.pos.y >= windowDimensions[1] - scarfyData.rec.height)
+
+        if (IsOnGround(scarfyData, windowDimensions[1]))
         {
             // ground check
             velocity = 0;
@@ -82,16 +106,13 @@ int main()
         else
         {
             // apply gravity
-
             velocity += gravity * deltaTime;
             isJumping = true;
         }
 
         if (IsKeyPressed(KEY_SPACE) && !isJumping)
         {
-
             velocity += jumpVelocity;
-
         }
 
         // update position of each nebula
@@ -100,45 +121,18 @@ int main()
             nebulae[i].pos.x += nebulaVel * deltaTime;
         }
 
-
-
-
         // apply velocity to position
         scarfyData.pos.y += velocity * deltaTime;
 
-        //update running time
-        scarfyData.runningTime += deltaTime;
-
-        // update nebula running time
-        nebulae[0].runningTime += deltaTime;
-
-
-
-        if(scarfyData.runningTime >= scarfyData.updateTime && !isJumping)
-        {
-            scarfyData.runningTime = 0;
-            // update animation frame
-            scarfyData.rec.x = scarfyData.frame * scarfyData.rec.width;
-            scarfyData.frame ++;
-            if (scarfyData.frame > 5)
-            {
-                scarfyData.frame = 0;
-            }
-        }
+       if (!isJumping)
+       {
+           scarfyData = UpdateAnimData(scarfyData,deltaTime,5);
+       }
 
 
         for (int i = 0; i < sizeOfNebulae; i++ )
         {
-            if (nebulae[i].runningTime >= nebulae[i].updateTime)
-            {
-                nebulae[i].runningTime = 0.0;
-                nebulae[i].rec.x = nebulae[i].frame * nebulae[i].rec.width;
-                nebulae[i].frame ++;
-                if(nebulae[i].frame > 7)
-                {
-                    nebulae[i].frame = 0;
-                }
-            }
+            nebulae[i] = UpdateAnimData(nebulae[i], deltaTime, 7);
         }
 
 
