@@ -30,7 +30,18 @@ int main()
     // set fps
     SetTargetFPS(60);
 
-
+    // player variables
+    Texture2D scarfy = LoadTexture("../textures/scarfy.png");
+    AnimData scarfyData{};
+    scarfyData.rec.width = scarfy.width/6;
+    scarfyData.rec.height = scarfy.height;
+    scarfyData.rec.x = 0;
+    scarfyData.rec.y = 0;
+    scarfyData.pos.x = windowDimensions[0]/ 2 - scarfyData.rec.width / 2;
+    scarfyData.pos.y = windowDimensions[1] - scarfyData.rec.height;
+    scarfyData.frame = 0;
+    scarfyData.updateTime = 1.0 / 12.0;
+    scarfyData.runningTime = 0.0;
 
     // nebula x velocity
     int nebulaVel{-200};
@@ -59,18 +70,9 @@ int main()
     neb2Data.updateTime = 1.0 / 12.0;
     neb2Data.runningTime = 0.0;
 
-    // player variables
-    Texture2D scarfy = LoadTexture("../textures/scarfy.png");
-    AnimData scarfyData{};
-    scarfyData.rec.width = scarfy.width/6;
-    scarfyData.rec.height = scarfy.height;
-    scarfyData.rec.x = 0;
-    scarfyData.rec.y = 0;
-    scarfyData.pos.x = windowDimensions[0]/ 2 - scarfyData.rec.width / 2;
-    scarfyData.pos.y = windowDimensions[1] - scarfyData.rec.height;
-    scarfyData.frame = 0;
-    scarfyData.updateTime = 1.0 / 12.0;
-    scarfyData.runningTime = 0.0;
+    // nebula AnimData Arrays
+    AnimData nebulae[2]{nebData, neb2Data};
+
 
 
     while (!WindowShouldClose())
@@ -115,6 +117,19 @@ int main()
         // update nebula running time
         nebData.runningTime += deltaTime;
 
+        if(scarfyData.runningTime >= scarfyData.updateTime && !isJumping)
+        {
+            scarfyData.runningTime = 0;
+            // update animation frame
+            scarfyData.rec.x = scarfyData.frame * scarfyData.rec.width;
+            scarfyData.frame ++;
+            if (scarfyData.frame > 5)
+            {
+                scarfyData.frame = 0;
+            }
+        }
+
+
         if (nebData.runningTime >= nebData.updateTime)
         {
             nebData.runningTime = 0.0;
@@ -128,26 +143,15 @@ int main()
 
         if (neb2Data.runningTime >= neb2Data.updateTime)
         {
-             neb2Data.runningTime = 0.0;
+            neb2Data.runningTime = 0.0;
             neb2Data.rec.x = neb2Data.frame * neb2Data.rec.width;
             neb2Data.frame ++;
-            if(neb2Data.frame> 7)
+            if(neb2Data.frame > 7)
             {
                 neb2Data.frame = 0;
             }
         }
 
-        if(scarfyData.runningTime >= scarfyData.updateTime && !isJumping)
-        {
-            scarfyData.runningTime = 0;
-            // update animation frame
-            scarfyData.rec.x = scarfyData.frame * scarfyData.rec.width;
-            scarfyData.frame ++;
-            if (scarfyData.frame > 5)
-            {
-                scarfyData.frame = 0;
-            }
-        }
 
         // draw player
         DrawTextureRec(scarfy,scarfyData.rec,scarfyData.pos,WHITE);
