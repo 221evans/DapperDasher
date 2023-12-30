@@ -13,9 +13,9 @@ struct AnimData
 int main()
 {
 
-    // window dimensions
-    const int windowWidth{512};
-    const int windowHeight{380};
+    int windowDimensions[2];
+    windowDimensions[0] = 512;
+    windowDimensions[1] = 380;
 
     // player jump variables
     const int jumpVelocity{-600};
@@ -23,7 +23,7 @@ int main()
     int velocity{0};
 
     // initiate window
-    InitWindow(windowWidth, windowHeight, "Dapper Dasher");
+    InitWindow(windowDimensions[0], windowDimensions[1], "Dapper Dasher");
 
     // add gravity
     const int gravity{1000};
@@ -32,6 +32,8 @@ int main()
 
 
 
+    // nebula x velocity
+    int nebulaVel{-200};
 
     // nebula variables
     Texture2D nebula = LoadTexture("../textures/12_nebula_spritesheet.png");
@@ -40,8 +42,8 @@ int main()
    AnimData nebData;
    nebData.rec.width = nebula.width/8;
    nebData.rec.height = nebula.height/8;
-   nebData.pos.x = windowWidth;
-   nebData.pos.y = windowHeight - nebData.rec.height;
+   nebData.pos.x = windowDimensions[0];
+   nebData.pos.y = windowDimensions[1] - nebData.rec.height;
    nebData.frame = 0;
    nebData.updateTime = 1.0 / 12.0;
    nebData.runningTime = 0.0;
@@ -51,14 +53,11 @@ int main()
     AnimData neb2Data;
     neb2Data.rec.width = nebula.width/8;
     neb2Data.rec.height = nebula.height/8;
-    neb2Data.pos.x = windowWidth + 300;
-    neb2Data.pos.y = windowHeight - nebData.rec.height;
+    neb2Data.pos.x = windowDimensions[0] + 300;
+    neb2Data.pos.y = windowDimensions[1] - nebData.rec.height;
     neb2Data.frame = 0;
-    neb2Data.updateTime = 1.0 / 16.0;
+    neb2Data.updateTime = 1.0 / 12.0;
     neb2Data.runningTime = 0.0;
-
-    // nebula x velocity
-    int nebulaVel{-200};
 
     // player variables
     Texture2D scarfy = LoadTexture("../textures/scarfy.png");
@@ -67,8 +66,8 @@ int main()
     scarfyData.rec.height = scarfy.height;
     scarfyData.rec.x = 0;
     scarfyData.rec.y = 0;
-    scarfyData.pos.x = windowWidth / 2 - scarfyData.rec.width / 2;
-    scarfyData.pos.y = windowHeight - scarfyData.rec.height;
+    scarfyData.pos.x = windowDimensions[0]/ 2 - scarfyData.rec.width / 2;
+    scarfyData.pos.y = windowDimensions[1] - scarfyData.rec.height;
     scarfyData.frame = 0;
     scarfyData.updateTime = 1.0 / 12.0;
     scarfyData.runningTime = 0.0;
@@ -79,7 +78,7 @@ int main()
         BeginDrawing();
         ClearBackground(WHITE);
         const float deltaTime = GetFrameTime();
-        if (scarfyData.pos.y >= windowHeight - scarfyData.rec.height)
+        if (scarfyData.pos.y >= windowDimensions[1] - scarfyData.rec.height)
         {
             // ground check
             velocity = 0;
